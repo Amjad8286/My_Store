@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{% block title %} {% endblock title %}</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'font/fontello/css/fontello.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <!-- Bootstrap icons-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+
+    {% block css %}
+
+    {% endblock css %}
+
+
+    <style>
+        input#search {
+            margin-left: -118px;
+        }
+
+        button.bi.bi-heart-fill {
+            color: #ff4343;
+        }
+
+        button.bi.bi-heart {
+            opacity: .2;
+            stroke: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation-->
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message : </strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/">My Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="/" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Bags</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Laptops</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/seller">Seller</a></li>
+                </ul>
+                <form method="get" action="/search" style=" margin-left: 35rem;" class="d-flex">
+                    <input style="border-radius: 0.25rem;" class="text-center" list="productlist"
+                        Placeholder="Search ..." class="form-control" style="width:300px;" id="search" name="search">
+
+                    <button style="margin-right: -68px;" class="btn btn-outline-dark" type="submit">
+                        <i class="bi-search-fill me-1"></i>
+                        Search
+                    </button>
+                    <datalist id="productlist">
+                        {% block search %}
+
+                        {% endblock search %}
+
+                </form>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                welcome {{request.user|truncatechars:6}}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+            </ul>
+        </div>
+        </div>
+
+        {% else %}
+        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#signupmodal"
+            data-bs-whatever="@fat">Sign Up</button>
+        <button type="button" class="btn btn-outline-dark mx-1" data-bs-toggle="modal" data-bs-target="#loginmodal"
+            data-bs-whatever="@fat">Log In</button>
+
+        {% endif %}
+
+        <div class="modal fade" id="signupmodal" tabindex="-1" aria-labelledby="signupmodal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signupmodal">Sign Up</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/sing_up" method="post">
+                            {% csrf_token %}
+                            <div>
+                                <label for="recipient-name" class="col-form-label">User Name</label>
+                                <input type="name" class="form-control" id="name" name="name"
+                                    placeholder="Enter Your User Name" required>
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">First Name</label>
+                                <input class="form-control" id="fname" name="fname" placeholder="Enter Your First Name"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">Last Name</label>
+                                <input class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="example@example.com" required>
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">Password</label>
+                                <input type="password" class="form-control" id="pass1" name="pass1"
+                                    placeholder="Enter Your Password" required>
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="pass2" name="pass2"
+                                    placeholder="Re Enter Your Password" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="loginmodal" tabindex="-1" aria-labelledby="loginmodal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginmodal">Log In</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/handlelogin" method="post">
+                            {% csrf_token %}
+                            <div>
+                                <label for="recipient-name" class="col-form-label">Username/Email;</label>
+                                <input type="text" class="form-control" id="username1" name="username1"
+                                    placeholder="Enter Your Username Or Email Address">
+                            </div>
+                            <div>
+                                <label for="message-text" class="col-form-label">Password:</label>
+                                <input type="password" class="form-control" id="password1" name="password1"
+                                    placeholder="Enter Your Password">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block body %}
+
+    {% endblock body %}
+
+    <!-- Footer-->
+    {% block js %}
+
+    {% endblock js %}
+    <script src="{% static 'dist/jQuery-BEShare.min.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'vendor/jquery-1.11.1.min.js' %}"></script>
+    <script src="{% static 'src/jQuery-BEShare.js' %}"></script>
+</body>
+
+</html>
