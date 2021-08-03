@@ -1,1 +1,1 @@
-web: gunicorn mystore.wsgi
+web: gunicorn My_store.wsgi:application --log-file -
